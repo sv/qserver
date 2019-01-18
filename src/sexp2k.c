@@ -25,6 +25,7 @@ ZK from_raw_robject(SEXP);
 ZK from_nyi_robject(SEXP);
 ZK from_frame_robject(SEXP);
 ZK from_factor_robject(SEXP);
+ZK from_date_robject(SEXP);
 
 Rboolean isClass(const char *class_, SEXP s) {
   SEXP klass;
@@ -44,6 +45,9 @@ ZK from_any_robject(SEXP sxp) {
   }
   if(isClass("factor", sxp)) {
     return from_factor_robject(sxp);
+  }
+  if(isClass("Date", sxp)) {
+    return from_date_robject(sxp);
   }
   K result= 0;
   int type= TYPEOF(sxp);
@@ -158,6 +162,16 @@ ZK from_factor_robject(SEXP sxp) {
   for(J i= 0; i < length; i++) {
     const char *sym= CHAR(STRING_ELT(levels, i));
     kS(x)[i]= ss((S) sym);
+  }
+  return x;
+}
+
+ZK from_date_robject(SEXP sxp) {
+  J length= XLENGTH(sxp);
+  K x= ktn(KD,length);
+  for(J i= 0; i < length; i++) {
+    kI(x)[i]=round(REAL(sxp)[i]);
+    if(kI(x)[i]!=ni)kI(x)[i]-=10957;
   }
   return x;
 }

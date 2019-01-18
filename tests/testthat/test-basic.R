@@ -150,6 +150,8 @@ test_that("R types to kdb types", {
   execute(h, remoteCheckFunc)
   int <- execute(h, 'cc[;6h;(),1i]', 1L)   # R doesn't have scalars
   expect_equal(int, c(okType = TRUE, okValue = TRUE))
+  date <- execute(h, 'cc[;14h;(),2019.01.15]', as.Date('2019-01-15'))
+  expect_equal(date, c(okType = TRUE, okValue = TRUE))
   intV <- execute(h, 'cc[;6h;1 2i]', c(1L, 2L))
   int64 <- execute(h, 'cc[;7h;(),1]', as.integer64(1))
   expect_equal(int64, c(okType = TRUE, okValue = TRUE))
